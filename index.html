@@ -120,6 +120,27 @@ button:focus-visible,.pair-link:focus-visible{outline:3px solid #7ee8ff;outline-
 
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Match results: refined midnight-blue score tiles and mint-green winners */
+.match .set{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:48px;padding:8px 11px;border-radius:9px;
+  background:#102c4a;border:1px solid #32658d;
+  color:#f4f9ff;font-weight:800;font-size:14px;
+  letter-spacing:.015em;font-variant-numeric:tabular-nums;
+  box-shadow:inset 0 1px 0 #ffffff0b;
+}
+.match .team.winner{color:#58f0b5;font-weight:900}
+@media(max-width:640px){
+  .match .sets{gap:7px}
+  .match .set{min-width:46px;padding:8px 9px;font-size:14px}
+}
+
+/* Highlight the game count that won each set */
+.match .set{gap:3px}
+.match .set-game{color:#f4f9ff;font-weight:650;font-variant-numeric:tabular-nums}
+.match .set-game-won{color:#58f0b5;font-weight:950;text-shadow:0 0 10px #58f0b540}
+.match .set-dash{color:#7d9db8;font-weight:500}
 </style></head><body>
 <header><div class="wrap"><div class="brand"><span class="brand-mark" aria-hidden="true">🎾</span><span><span class="brand-top">THE ESSEX</span><strong>PADEL LEAGUE</strong></span></div><div class="premium-hero"><div class="hero-content"><div class="eyebrow">ESSEX · PADEL · COMPETITION</div><h1>Ten pairs.<br>One league.<br><span>Every set counts.</span></h1><p>45 fixtures. 10 pairs. One champion.</p></div><div class="court-art" aria-hidden="true"><div class="court-surface"><div class="court-mid"></div><div class="court-service"></div><div class="court-center"></div></div><div class="padel-ball"></div><div class="padel-racket"><div class="racket-face"></div><div class="racket-handle"></div></div></div></div></div></header>
 <main class="wrap"><nav aria-label="League navigation"><button class="active" data-tab="overview">Overview</button><button data-tab="table">League table</button><button data-tab="fixtures">Fixtures & results</button><button data-tab="organiser">Submit Score</button><button id="share" class="secondary">Share link</button></nav>
@@ -150,7 +171,7 @@ document.getElementById('profileWinRate').innerHTML=`<div class="winrate-ring" s
 const played=results.filter(r=>r.home===name||r.away===name);document.getElementById('profileCompleted').innerHTML=played.length?played.map(matchHtml).join(''):'<p class="small">No matches played yet.</p>';
 const remaining=fixtures.filter(f=>(f.home===name||f.away===name)&&!resultFor(f.home,f.away));document.getElementById('profileUpcoming').innerHTML=remaining.length?remaining.map(f=>`<div class="match"><div class="team">${esc(f.home)}</div><div class="sets"><span class="vs">VS · TBC</span></div><div class="team right">${esc(f.away)}</div></div>`).join(''):'<p class="small">All fixtures completed.</p>';
 }
-function matchHtml(r){let hs=r.sets.filter(s=>s[0]>s[1]).length,as=r.sets.filter(s=>s[1]>s[0]).length;return `<div class="match"><div class="team ${hs>as?'winner':''}">${esc(r.home)}</div><div class="sets">${r.sets.map(s=>`<span class="set">${s[0]}–${s[1]}</span>`).join('')}</div><div class="team right ${as>hs?'winner':''}">${esc(r.away)}</div></div>`}
+function matchHtml(r){let hs=r.sets.filter(s=>s[0]>s[1]).length,as=r.sets.filter(s=>s[1]>s[0]).length;return `<div class="match"><div class="team ${hs>as?'winner':''}">${esc(r.home)}</div><div class="sets">${r.sets.map(s=>`<span class="set"><span class="set-game ${s[0]>s[1]?'set-game-won':''}">${s[0]}</span><span class="set-dash">–</span><span class="set-game ${s[1]>s[0]?'set-game-won':''}">${s[1]}</span></span>`).join('')}</div><div class="team right ${as>hs?'winner':''}">${esc(r.away)}</div></div>`}
 function renderChart(rows){
 const labels={pts:'League points',sw:'Sets won',gd:'Games difference'};
 document.querySelectorAll('[data-chart]').forEach(b=>{const active=b.dataset.chart===selectedChart;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
